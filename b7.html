@@ -10,7 +10,7 @@ var app = angular.module("Bookmark", ['firebase']);
 app.controller("Ctrl", function ($scope, $firebaseArray) {
 	$scope.url;  
 
-    var firebaseURL = "https://sbookmark.firebaseio.com/";
+    var firebaseURL = "https://zooomg.firebaseio.com/";
 
     $scope.getList = function() {
     	var echoRef = new Firebase(firebaseURL);
@@ -33,7 +33,7 @@ app.controller("Ctrl", function ($scope, $firebaseArray) {
 <body ng-app="Bookmark" ng-controller="Ctrl">
 <h1>Hi! {{urlArr.length}}</h1>
 <ol ng-repeat="u in urlArr">
-  <li> {{u}} 
+  {{$index+1}}. {{u.url}} 
 </ol>
 <form>
 <input ng-model="url">

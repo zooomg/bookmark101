@@ -18,7 +18,7 @@ app.controller("Ctrl", function ($scope) {
 <body ng-app="Bookmark" ng-controller="Ctrl">
 <h1>Hi! {{urlArr.length}}</h1>
 <ol ng-repeat="u in urlArr">
-  <li> {{u}} 
+  {{$index+1}}. {{u}}
 </ol>
 <form>
 <input ng-model="url">

@@ -5,75 +5,104 @@
 <script src="https://cdn.firebase.com/libs/angularfire/1.1.3/angularfire.min.js"></script>
 
 <!-- Angular -->
-<script>  
-var app = angular.module("Bookmark", ['firebase']);  
-app.controller("Ctrl", function ($scope, $firebaseArray) {
-	$scope.url;  
-
-    var firebaseURL = "https://sbookmark.firebaseio.com/";
-
-    $scope.getList = function() {
-    	var echoRef = new Firebase(firebaseURL);
-  		var query = echoRef.orderByChild("url");
-  		$scope.urlArr = $firebaseArray(query);
-    };
-
-    $scope.add = function() { 
-  		$scope.urlArr.$add({
-    		url: $scope.url,
-    		title: "TBA"
-  		});   
-    };
-
-    $scope.remove = function (url) {
-      $scope.urlArr.$remove(url);
-    };
+<script src="give.js">  
 
 
-    $scope.FBLogin = function () {
-      var ref = new Firebase(firebaseURL);
-      ref.authWithOAuthPopup("facebook", function(error, authData) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        $scope.$apply(function() {
-        $scope.$authData = authData;
-      });
-      console.log("Authenticated successfully with payload:", authData);
-
-      // do something with the login info
-    }
-  });
-};
-
-$scope.FBLogout = function () {
-  var ref = new Firebase(firebaseURL);
-  ref.unauth();
-  delete $scope.$authData;
-
-  // do something after logout
-};
-
-    // load the list!
-    $scope.getList();
-});  
 </script>
+<head>
+<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>FB</title>
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="cover.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
 <body ng-app="Bookmark" ng-controller="Ctrl">
-<h1>Hi! {{urlArr.length}}</h1>
 
-<button ng-hide="$authData" class="btn btn-primary" type="button" ng-click="FBLogin()">Sign in with Facebook</button>
-{{$authData}}
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <nav>
+                
+                <button ng-hide="$authData" class="btn btn-primary" type="button" ng-click="FBLogin()">Sign in with Facebook</button>
+
 <button ng-show="$authData" class="btn btn-primary" type="button" ng-click="FBLogout()">Logout</button>
 
-<ol ng-repeat="u in urlArr">
-  <li> {{u.url}} {{u.title}} <A href="#" ng-click="remove(u);">[X]</A><a>
-</ol>
-<form>
-<input ng-model="url">
-<input type="submit" ng-click="add();">
-</form>
-  
+
+              </nav>
+            </div>
+          </div>
+
+          <div class="inner cover">
+	    <img ng-hide="$authData" class="img-circle" src="https://s3.ap-northeast-2.amazonaws.com/zooomg.ddns.net/profile-no-photo.png" width="140" height="140">
+            <img ng-show="$authData" class="img-circle" src="{{$authData['facebook']['profileImageURL']}}"
+ onerror="this.src='https://s3.ap-northeast-2.amazonaws.com/zooomg.ddns.net/profile-no-photo.png'" width="140" height="140">
+            <h1 ng-hide="$authData" class="cover-heading">?'s 북마크</h1>
+	    <h1 ng-show="$authData" class="cover-heading">{{$authData['facebook']['displayName']}}'s 북마크</h1>
+            <ol ng-repeat="u in urlArr">
+              {{$index+1}}. {{u.url}} <A href="#" ng-click="remove(u);">[X]</A><a>
+            </ol>
+            <form>
+              <input type="url" ng-model="url" style="background-color:black" required pattern="https?://.+">
+              <input type="submit" ng-click="add();" style="background-color:black">
+
+            </form>
+
+
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>  
 
 </body>
 </html>
